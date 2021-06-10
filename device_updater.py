@@ -5,18 +5,6 @@ from queries import update_device_ip, select_device, insert_device
 from mikrotik_api import get_dhcp_leases
 
 
-def get_ip_by_mac(mac):
-    cmd = f'arp -a | grep {mac}'
-    try:
-        returned_output = subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT).decode('utf-8')
-        ip = returned_output.split(')')[0].split('(')[1]
-        print(mac, 'not found')
-    except subprocess.CalledProcessError:
-        print(mac, 'not found')
-        ip = False
-    return ip
-
-
 def clean_leases(leases_list):
     leases_cleaned = list()
     for lease_raw in leases_list:
