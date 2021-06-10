@@ -16,6 +16,9 @@ def clean_leases(leases_list):
 if __name__ == '__main__':
     while True:
         leases_raw = get_dhcp_leases()
+        if not leases_raw:
+            print('sw not connected, repeat...')
+            continue
         leases = clean_leases(leases_raw)
         while leases:
             lease = leases.pop()

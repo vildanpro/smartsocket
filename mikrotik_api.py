@@ -9,6 +9,9 @@ def get_dhcp_leases():
                                                   password=config.mikrotik_password,
                                                   plaintext_login=True)
         api = connection.get_api()
+        leases = api.get_resource('/ip/dhcp-server/lease/').get()
+        print(f'Leases from sw:', len(leases))
     except Exception as e:
         print(e)
-    return api.get_resource('/ip/dhcp-server/lease/').get()
+        leases = None
+    return leases
