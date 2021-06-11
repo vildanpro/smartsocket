@@ -33,7 +33,7 @@ async def main():
     tasks = list()
     async with aiohttp.ClientSession() as session:
         for message in messages:
-            print(message.message_id)
+            print(message)
             request_date = current_date()
             task = asyncio.create_task(async_request(message=message, session=session, request_date=request_date))
             tasks.append(task)
