@@ -2,7 +2,7 @@ import random
 from collections import namedtuple
 from time import sleep
 
-from addons.queries import insert_new_message, select_devices_ids, select_devices_by_id
+from queries import insert_new_message, select_devices_ids, select_devices_by_id
 
 
 ids = [42, 48]
