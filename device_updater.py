@@ -22,7 +22,7 @@ if __name__ == '__main__':
             lease = leases.pop()
             device_db = select_device(lease['mac'])
             if device_db:
-                if device_db[0].ip != lease['ip']:
+                if device_db[0]['ip'] != lease['ip']:
                     update_device_ip(device_db[0]['mac'], lease['ip'])
                     print(f'Updated device {device_db[0]["device_name"]}')
             else:
