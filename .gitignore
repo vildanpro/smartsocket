@@ -1,4 +1,5 @@
-/config.py
+/addons/config.py
 /.idea
 /venv
 /venv-win
+addons/config.py

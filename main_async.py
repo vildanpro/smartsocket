@@ -2,7 +2,7 @@ from datetime import datetime
 import asyncio
 import json
 import aiohttp
-import config
+from addons import config
 from addons.queries import get_new_messages, update_message_if_response_code_200, update_message_with_exception
 
 
