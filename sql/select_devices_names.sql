@@ -1,2 +1,0 @@
-SELECT device_name
-FROM sockets.devices

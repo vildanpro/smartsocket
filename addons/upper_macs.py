@@ -1,4 +1,4 @@
-from queries import update_device_upper_mac, get_devices
+from addons.queries import update_device_upper_mac, get_devices
 
 
 devices_db = get_devices()
