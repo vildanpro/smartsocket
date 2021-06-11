@@ -24,8 +24,7 @@ if __name__ == '__main__':
             if device_db:
                 if device_db[0]['IP'] != lease['IP']:
                     update_device_ip(device_db[0]['MAC'], lease['IP'])
-                    print(f'Updated device {device_db[0]["DEVICE_NAME"]}')
             else:
-                insert_device(mac=lease['mac'], ip=lease['ip'])
+                insert_device(mac=lease['MAC'], ip=lease['IP'])
         sleep(5)
 

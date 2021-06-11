@@ -139,9 +139,9 @@ def update_device_upper_mac(mac):
 
 
 def update_device_ip(mac, ip):
-    device = select_device(mac)
-    print(f'{datetime.now().strftime("%h:%m:%S %d.%m.%Y")} - Device updated: '
-          f'{device.device_name} {mac.upper}, {device.ip} -> {ip}')
+    device = select_device(mac)[0]
+    print(f'{datetime.now().strftime("%d.%m.%Y %H:%M:%S")} - Device updated: '
+          f'{device["DEVICE_NAME"]} {mac.upper()}, {device["IP"]} -> {ip}')
     query_update(f"UPDATE sockets.devices SET ip = '{ip}' WHERE mac = '{mac.upper()}'")
 
 
@@ -149,9 +149,9 @@ def insert_device(mac, ip):
     device_names = select_devices_names()
     last_device_number = 0
     for device_name in device_names:
-        device_number = int(''.join(filter(str.isdigit, device_name.device_name)))
+        device_number = int(''.join(filter(str.isdigit, device_name['DEVICE_NAME'])))
         if device_number and device_number > last_device_number:
             last_device_number = device_number
     device_name = f'S-{str(last_device_number + 1).zfill(4)}'
-    print(f'{datetime.now().strftime("%h:%m:%S %d.%m.%Y")} - New device added: {device_name}, {mac.upper}, {ip}')
+    print(f'{datetime.now().strftime("%d.%m.%Y %H:%M:%S")} - New device added: {device_name}, {mac.upper()}, {ip}')
     query_insert(f"INSERT INTO sockets.devices(device_name, mac, ip) VALUES('{device_name}', '{mac.upper()}', '{ip}')")
