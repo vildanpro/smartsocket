@@ -1,10 +1,11 @@
 from datetime import datetime
 import asyncio
 import json
+from time import sleep
+
 import aiohttp
 import config
 from queries import get_new_messages, update_message_if_response_code_200, update_message_with_exception
-
 
 timeout = aiohttp.ClientTimeout(total=config.request_device_timeout)
 
@@ -36,7 +37,9 @@ async def async_request(message, session):
 
 async def main():
     tasks = list()
+    print('NEW TASK LIST')
     async with aiohttp.ClientSession() as session:
+        print('NEW SESSION')
         messages = get_new_messages()
         for message in messages:
             print('MESSAGE_ID: {MESSAGE_ID},\n'
@@ -47,6 +50,8 @@ async def main():
             tasks.append(task)
         await asyncio.gather(*tasks)
 
+
 if __name__ == '__main__':
     while True:
+        print('START NEW LOOP')
         asyncio.run(main())

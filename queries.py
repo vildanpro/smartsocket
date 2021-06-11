@@ -101,11 +101,11 @@ def update_message_with_exception(data):
     )
 
 
-def insert_new_message(message):
+def insert_new_message(device_id, message_type_id, message_state_id):
     query_insert(
         f'''
             INSERT INTO sockets.messages(message_type_id, device_id, message_state_id) 
-            VALUES({message.message_type_id}, {message.device_id}, {message.message_state_id})
+            VALUES({message_type_id}, {device_id}, {message_state_id})
     ''')
 
 
@@ -130,8 +130,8 @@ def select_devices_names() -> list:
     return query_select(f'SELECT device_name FROM sockets.devices')
 
 
-def select_device(mac):
-    return query_select(f"SELECT device_id, device_name, mac, ip FROM sockets.devices WHERE mac = '{mac.upper()}'")
+def select_device_by_mac(mac):
+    return query_select(f"SELECT device_id, device_name, mac, ip FROM sockets.devices WHERE mac = '{mac.upper()}'")[0]
 
 
 def update_device_upper_mac(mac):
@@ -139,7 +139,7 @@ def update_device_upper_mac(mac):
 
 
 def update_device_ip(mac, ip):
-    device = select_device(mac)[0]
+    device = select_device_by_mac(mac)[0]
     print(f'{datetime.now().strftime("%d.%m.%Y %H:%M:%S")} - Device updated: '
           f'{device["DEVICE_NAME"]} {mac.upper()}, {device["IP"]} -> {ip}')
     query_update(f"UPDATE sockets.devices SET ip = '{ip}' WHERE mac = '{mac.upper()}'")

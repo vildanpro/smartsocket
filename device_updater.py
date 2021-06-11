@@ -1,5 +1,5 @@
 from time import sleep
-from queries import update_device_ip, select_device, insert_device
+from queries import update_device_ip, select_device_by_mac, insert_device
 from mikrotik_api import get_dhcp_leases
 
 
@@ -20,10 +20,10 @@ if __name__ == '__main__':
         leases = clean_leases(leases_raw)
         while leases:
             lease = leases.pop()
-            device_db = select_device(lease['MAC'])
+            device_db = select_device_by_mac(lease['MAC'])
             if device_db:
-                if device_db[0]['IP'] != lease['IP']:
-                    update_device_ip(device_db[0]['MAC'], lease['IP'])
+                if device_db['IP'] != lease['IP']:
+                    update_device_ip(device_db['MAC'], lease['IP'])
             else:
                 insert_device(mac=lease['MAC'], ip=lease['IP'])
         sleep(5)
