@@ -1,13 +1,6 @@
-import collections
 import cx_Oracle
 import config
 from datetime import datetime
-
-
-def make_named_tuple_factory(cursor):
-    column_names = [d[0].lower() for d in cursor.description]
-    row = collections.namedtuple('row', column_names)
-    return row
 
 
 def make_dict_factory(cursor):
@@ -16,15 +9,6 @@ def make_dict_factory(cursor):
     def create_row(*args):
         return dict(zip(column_names, args))
     return create_row
-
-
-def named_tuple_to_dict(t):
-    t_list = list()
-    print(t)
-    for i in t:
-        t_list.append(i._asdict())
-    print(t_list)
-    return t_list
 
 
 def get_oracle_connection():
@@ -44,28 +28,32 @@ def get_oracle_connection():
 
 def query_select(query):
     connection = get_oracle_connection()
-    cursor = connection.cursor().execute(query)
-    cursor.rowfactory = make_dict_factory(cursor)
-    data = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return data
+    if connection:
+        with connection.cursor().execute(query) as cursor:
+            cursor.rowfactory = make_dict_factory(cursor)
+            data = cursor.fetchall()
+        connection.close()
+        return data
 
 
 def query_insert(query):
     connection = get_oracle_connection()
-    cursor = connection.cursor()
-    cursor.execute(query)
-    connection.commit()
-    connection.close()
+    if connection:
+        cursor = connection.cursor()
+        cursor.execute(query)
+        connection.commit()
+        connection.close()
+        return True
 
 
 def query_update(query):
     connection = get_oracle_connection()
-    cursor = connection.cursor()
-    cursor.execute(query)
-    connection.commit()
-    connection.close()
+    if connection:
+        cursor = connection.cursor()
+        cursor.execute(query)
+        connection.commit()
+        connection.close()
+        return True
 
 
 def get_new_messages():
@@ -76,29 +64,28 @@ def get_devices():
     return query_select('SELECT * FROM sockets.devices ORDER BY device_id')
 
 
-def update_message_if_response_code_200(data):
+def update_message_if_response_code_200(message_id, response_code, request_date, response_date, response_body):
     query_update(
-        """
+        f"""
             UPDATE sockets.messages
             SET message_state_id = 21,
-                response_code = 200,
+                response_code = {response_code},
                 response_body = '{response_body}',
                 request_date = TO_DATE('{request_date}', 'YYYY-MM-DD HH24:MI:SS'),
                 response_date = TO_DATE('{response_date}', 'YYYY-MM-DD HH24:MI:SS')
             WHERE message_id = {message_id}
-        """.format(**data)
+        """
     )
 
 
-def update_message_with_exception(data):
-    query_update(
-        """
+def update_message_with_exception(message_id, response_code, response_body, request_date):
+    sql = f"""
             UPDATE sockets.messages
             SET message_state_id = 24, response_code = {response_code}, response_body = '{response_body}',
                 request_date = TO_DATE('{request_date}', 'YYYY-MM-DD HH24:MI:SS')
             WHERE message_id = {message_id}
-        """.format(**data)
-    )
+        """
+    query_update(sql)
 
 
 def insert_new_message(device_id, message_type_id, message_state_id):
