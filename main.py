@@ -11,7 +11,7 @@ def date_now():
 def device_request(m):
     resp_data = {'message_id': m['MESSAGE_ID'], 'request_date': date_now()}
     try:
-        with requests.get(m['URI']) as resp:
+        with requests.get(m['URI'], timeout=(5, 5)) as resp:
             response_body = json.dumps(resp.json())
             response_date = date_now()
             resp_data.update({'response_code': resp.status_code,

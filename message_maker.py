@@ -5,6 +5,8 @@ from time import sleep
 from queries import insert_new_message, select_devices_ids, select_devices_by_id, select_device_by_mac
 from device_updater import get_dhcp_leases, clean_leases
 
+sleep_sec = 30
+
 random_id = False
 
 only_online = True
@@ -45,4 +47,5 @@ while True:
                 insert_new_message(device_id=device['DEVICE_ID'],
                                    message_type_id=choice(message_types),
                                    message_state_id=1)
-    sleep(20)
+    print(f'Done. Wait {sleep_sec} seconds...')
+    sleep(sleep_sec)
