@@ -16,12 +16,14 @@ message_types = [41]
 
 while True:
     if ids:
+        print('Генерация по указаынм ID:', ids)
         devices = select_devices_by_id(ids)
         insert_new_message(device_id=choice(devices)['DEVICE)ID'],
                            message_type_id=choice(message_types),
                            message_state_id=1)
     else:
         if only_online:
+            print('Генерация только по устройствам которые online...')
             leases = clean_leases(get_dhcp_leases())
             devices = list()
             for lease in leases:
@@ -30,14 +32,17 @@ while True:
         else:
             devices = select_devices_ids()
         if random_id:
+            print('Выбрана случайная выборка устройств...')
             for device in devices:
+                print(device)
                 insert_new_message(device_id=choice(devices)['DEVICE_ID'],
                                    message_type_id=choice(message_types),
                                    message_state_id=1)
         elif not random_id:
+            print('Выбрана последовательная выборка устройств...')
             for device in devices:
                 print(device)
                 insert_new_message(device_id=device['DEVICE_ID'],
                                    message_type_id=choice(message_types),
                                    message_state_id=1)
-    sleep(30)
+    sleep(10)
