@@ -45,4 +45,4 @@ while True:
                 insert_new_message(device_id=device['DEVICE_ID'],
                                    message_type_id=choice(message_types),
                                    message_state_id=1)
-    sleep(10)
+    sleep(20)
