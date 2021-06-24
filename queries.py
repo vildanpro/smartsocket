@@ -124,7 +124,9 @@ def select_devices_names() -> list:
 
 
 def select_device_by_mac(mac):
-    return query_select(f"SELECT device_id, device_name, mac, ip FROM sockets.devices WHERE mac = '{mac.upper()}'")[0]
+    device = query_select(f"SELECT device_id, device_name, mac, ip FROM sockets.devices WHERE mac = '{mac.upper()}'")
+    if device:
+        return device[0]
 
 
 def update_device_upper_mac(mac):

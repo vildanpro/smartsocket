@@ -44,7 +44,7 @@ if __name__ == '__main__':
                         print(f'Device {device_db["DEVICE_NAME"]} updated {device_db["IP"]} -> {lease["IP"]}')
                 else:
                     insert_device(mac=lease['MAC'], ip=lease['IP'])
-                    print(f'Device {device_db["DEVICE_NAME"]} added IP: {lease["IP"]}, MAC {lease["MAC"]}')
+
             print(f'No updates, waiting {sec} seconds...')
         sleep(10)
 
