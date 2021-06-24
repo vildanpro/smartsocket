@@ -9,9 +9,8 @@ from queries import get_new_messages_by_device_id, update_message_if_response_co
 
 
 def device_request(message):
-    print(message)
     resp_data = {'message_id': message['MESSAGE_ID'], 'request_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-    print(resp_data)
+    print(f"DEVICE_ID: {message['DEVICE_ID']}, MESSAGE_ID: {message['MESSAGE_ID']}, URI: {message['URI']}")
     try:
         with requests.get(message['URI'], timeout=(5, 5)) as resp:
             response_body = json.dumps(resp.json())
@@ -22,7 +21,8 @@ def device_request(message):
             update_message_if_response_code_200(**resp_data)
             return resp_data
     except Exception as e:
-        resp_data.update({'response_code': 408, 'response_body': json.dumps({'Exception': str(e).replace("'", '')})})
+        response_body = json.dumps({'Exception': str(e).replace("'", '')})
+        resp_data.update({'response_code': 408, 'response_body': response_body})
         update_message_with_exception(**resp_data)
         return resp_data
 
