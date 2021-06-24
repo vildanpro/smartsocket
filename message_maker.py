@@ -5,7 +5,7 @@ from time import sleep
 from queries import insert_new_message, select_devices_ids, select_devices_by_id, select_device_by_mac
 from device_updater import get_dhcp_leases, clean_leases
 
-sleep_sec = 30
+sleep_sec = 0
 
 random_id = False
 
@@ -20,16 +20,16 @@ while True:
     if ids:
         print('Генерация по указаынм ID:', ids)
         devices = select_devices_by_id(ids)
-        insert_new_message(device_id=choice(devices)['DEVICE)ID'],
+        insert_new_message(device_id=choice(devices)['DEVICE_ID'],
                            message_type_id=choice(message_types),
                            message_state_id=1)
     else:
         if only_online:
             print('Генерация только по устройствам которые online...')
-            leases = clean_leases(get_dhcp_leases())
+            leases = get_dhcp_leases()
             devices = list()
             for lease in leases:
-                device = select_device_by_mac(lease['MAC'])
+                device = select_device_by_mac(lease['mac-address'])
                 devices.append(device)
         else:
             devices = select_devices_ids()
