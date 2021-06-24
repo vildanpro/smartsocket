@@ -60,6 +60,12 @@ def get_new_messages():
     return query_select('SELECT * FROM sockets.messages WHERE message_state_id = 1 ORDER BY message_id')
 
 
+def get_new_messages_by_device_id(device_id):
+    return query_select(
+        f'SELECT * FROM sockets.messages WHERE message_state_id = 1 and device_id = {device_id} ORDER BY message_id'
+    )
+
+
 def get_devices():
     return query_select('SELECT * FROM sockets.devices ORDER BY device_id')
 

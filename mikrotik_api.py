@@ -10,8 +10,11 @@ def get_dhcp_leases():
                                                   plaintext_login=True)
         api = connection.get_api()
         leases = api.get_resource('/ip/dhcp-server/lease/').get()
-        print(f'Leases from sw:', len(leases))
+        bound_leases = list()
+        for lease in leases:
+            if lease['status'] == 'bound' and int(lease['address'].split('.')[3]) >= 100:
+                bound_leases.append(lease)
     except Exception as e:
         print(e)
-        leases = None
-    return leases
+        bound_leases = None
+    return bound_leases
