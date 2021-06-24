@@ -44,7 +44,6 @@ def create_threads():
         device_id = device['DEVICE_ID']
         messages = get_new_messages_by_device_id(device['DEVICE_ID'])
         if messages:
-            print(f'Device_id: {device_id}, {len(messages)} new messages')
             new_thread = DeviceThread(device_id, messages)
             new_thread.start()
 

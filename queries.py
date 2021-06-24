@@ -95,6 +95,9 @@ def update_message_with_exception(message_id, response_code, response_body, requ
 
 
 def insert_new_message(device_id, message_type_id, message_state_id):
+    print(
+        f'Insert message: device_id {device_id}, message_type_id {message_type_id}, message_state_id {message_state_id}'
+    )
     query_insert(
         f'''
             INSERT INTO sockets.messages(message_type_id, device_id, message_state_id) 
