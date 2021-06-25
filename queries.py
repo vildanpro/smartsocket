@@ -137,7 +137,7 @@ def update_device_upper_mac(mac):
 
 
 def update_device_ip(mac, ip):
-    device = select_device_by_mac(mac)[0]
+    device = select_device_by_mac(mac)
     print(f'{datetime.now().strftime("%d.%m.%Y %H:%M:%S")} - Device updated: '
           f'{device["DEVICE_NAME"]} {mac.upper()}, {device["IP"]} -> {ip}')
     query_update(f"UPDATE sockets.devices SET ip = '{ip}' WHERE mac = '{mac.upper()}'")
