@@ -39,6 +39,7 @@ def query_select(query):
 def query_insert(query):
     connection = get_oracle_connection()
     if connection:
+        print(query)
         cursor = connection.cursor()
         cursor.execute(query)
         connection.commit()
