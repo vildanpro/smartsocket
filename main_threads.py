@@ -60,17 +60,21 @@ if __name__ == "__main__":
     wait_print = True
     while True:
         new_messages = db.get_new_messages()
-        devices = db.get_devices()
-        if devices and new_messages:
-            print(f'\n\nGet {len(new_messages)} new messages\n')
-            print('Create threads')
-            create_threads(devices, new_messages)
-            print('Threads finished\n\nWait for new messages', end='.')
-            wait_print = False
+        if new_messages:
+            devices = db.get_devices()
+            if devices:
+                print(f'\n\nGet {len(new_messages)} new messages\n')
+                print('Create threads')
+                create_threads(devices, new_messages)
+                print('Threads finished\n\nWait for new messages', end='.')
+                wait_print = False
+            else:
+                print('No devices')
         else:
             if wait_print:
                 print('\nWait for new messages', end='.')
                 wait_print = False
             else:
+                print()
                 print('.', end='')
         sleep(sleep_seconds)
