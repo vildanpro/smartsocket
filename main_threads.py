@@ -5,7 +5,8 @@ import requests
 from db import DB
 from time import sleep
 
-print('Connect to DB.', end=' ')
+sleep_seconds = 3
+print('\nConnect to DB.', end=' ')
 db = DB()
 
 
@@ -61,15 +62,15 @@ if __name__ == "__main__":
         new_messages = db.get_new_messages()
         devices = db.get_devices()
         if devices and new_messages:
-            print(f'\nGet {len(new_messages)} new messages ')
+            print(f'\n\nGet {len(new_messages)} new messages\n')
             print('Create threads')
             create_threads(devices, new_messages)
-            print('Threads finished\n')
-            print('Wait for new messages', end='.')
+            print('Threads finished\n\nWait for new messages', end='.')
+            wait_print = False
         else:
             if wait_print:
-                print('Wait for new messages', end='.')
+                print('\nWait for new messages', end='.')
                 wait_print = False
             else:
                 print(end='.')
-            sleep(5)
+            sleep(sleep_seconds)

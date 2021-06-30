@@ -22,7 +22,7 @@ class DB:
                                                     config.password,
                                                     config.dsn,
                                                     encoding=config.encoding)
-                print('DB connection - OK!')
+                print('DB connection - OK!\n')
             except cx_Oracle.Error as error:
                 print(error, f'\nWait {self.wait_connection} seconds...')
 
