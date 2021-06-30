@@ -5,7 +5,7 @@ from time import sleep
 
 import aiohttp
 import config
-from queries import get_new_messages, update_message_if_response_code_200, update_message_with_exception
+from db import get_new_messages, update_message_if_response_code_200, update_message_with_exception
 
 timeout = aiohttp.ClientTimeout(total=config.request_device_timeout)
 

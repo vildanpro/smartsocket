@@ -5,7 +5,7 @@ import aiohttp
 import asyncio
 import time
 
-from queries import get_new_messages, update_message_if_response_code_200
+from db import get_new_messages, update_message_if_response_code_200
 
 
 def date_now():

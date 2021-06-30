@@ -14,7 +14,8 @@ def get_dhcp_leases():
         for lease in leases:
             if lease['status'] == 'bound' and int(lease['address'].split('.')[3]) >= 100:
                 bound_leases.append(lease)
+        return 0 if not bound_leases else bound_leases
     except Exception as e:
         print(e)
-        bound_leases = None
-    return bound_leases
+        return 'No connection'
+

@@ -1,5 +1,5 @@
 from time import sleep
-from queries import update_device_ip, select_device_by_mac, insert_device
+from db import update_device_ip, select_device_by_mac, insert_device
 from mikrotik_api import get_dhcp_leases
 import socket
 
