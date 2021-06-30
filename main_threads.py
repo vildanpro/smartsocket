@@ -76,5 +76,4 @@ if __name__ == "__main__":
             else:
                 print('\nWait for new messages', end='.')
                 wait_print = False
-
         sleep(sleep_seconds)
