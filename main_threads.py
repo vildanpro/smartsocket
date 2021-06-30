@@ -65,6 +65,7 @@ if __name__ == "__main__":
             print('Create threads')
             create_threads(devices, new_messages)
             print('Threads finished\n')
+            print('Wait for new messages', end='.')
         else:
             if wait_print:
                 print('Wait for new messages', end='.')
