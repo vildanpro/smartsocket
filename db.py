@@ -54,7 +54,7 @@ class DB:
         return self.select('SELECT * FROM sockets.messages WHERE message_state_id = 1 ORDER BY message_id')
 
     def get_messages_types(self):
-        return self.select('SELECT * FROM sockets.messages_type_id')
+        return self.select('SELECT * FROM sockets.message_types')
 
     def get_new_messages_by_device_id(self, device_id):
         return self.select(

@@ -1,7 +1,10 @@
 from time import sleep
-from db import update_device_ip, select_device_by_mac, insert_device
+from db import DB
 from mikrotik_api import get_dhcp_leases
 import socket
+
+
+db = DB()
 
 
 def ping_server(server: str, port: int, timeout=3):
@@ -29,7 +32,7 @@ if __name__ == '__main__':
     while True:
         leases_raw = get_dhcp_leases()
         if not leases_raw:
-            print('sw not connected, repeat...')
+            print('no leases, repeat...')
             continue
         leases = clean_leases(leases_raw)
         if not leases:
@@ -37,15 +40,13 @@ if __name__ == '__main__':
         else:
             while leases:
                 lease = leases.pop()
-                device_db = select_device_by_mac(lease['MAC'])
+                device_db = db.select_device_by_mac(lease['MAC'])
                 if device_db:
                     if device_db['IP'] != lease['IP']:
-                        update_device_ip(device_db['MAC'], lease['IP'])
+                        db.update_device_ip(device_db['MAC'], lease['IP'])
                         print(f'Device {device_db["DEVICE_NAME"]} updated {device_db["IP"]} -> {lease["IP"]}')
                 else:
-                    insert_device(mac=lease['MAC'], ip=lease['IP'])
+                    db.insert_device(mac=lease['MAC'], ip=lease['IP'])
 
             print(f'No updates, waiting {sec} seconds...')
         sleep(10)
-
-
