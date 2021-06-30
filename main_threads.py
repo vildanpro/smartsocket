@@ -73,4 +73,4 @@ if __name__ == "__main__":
                 wait_print = False
             else:
                 print(end='.')
-            sleep(sleep_seconds)
+        sleep(sleep_seconds)
