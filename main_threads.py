@@ -71,10 +71,10 @@ if __name__ == "__main__":
             else:
                 print('No devices')
         else:
-            if wait_print:
+            if not wait_print:
+                print('.', end='')
+            else:
                 print('\nWait for new messages', end='.')
                 wait_print = False
-            else:
-                print()
-                print('.', end='')
+
         sleep(sleep_seconds)
