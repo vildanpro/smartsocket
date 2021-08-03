@@ -1,6 +1,5 @@
 from db import DB
 from mikrotik_api import get_dhcp_leases
-from pprint import pprint
 
 db = DB()
 
@@ -13,6 +12,12 @@ def add_messages(leases, message_type_id):
         db.insert_new_message(device_id=device['DEVICE_ID'],
                               message_type_id=message_type_id)
         print(f'{i}. Insert message: device_id {device["DEVICE_ID"]}, message_type_id {message_type_id}')
+
+
+def add_message(device, message_type_id):
+    db.insert_new_message(device_id=device['DEVICE_ID'],
+                          message_type_id=message_type_id)
+    print(f'Insert message: device_id {device["DEVICE_ID"]}, message_type_id {message_type_id}')
 
 
 if __name__ == '__main__':

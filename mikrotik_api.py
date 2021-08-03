@@ -19,3 +19,17 @@ def get_dhcp_leases():
         print(e)
         return 'No connection'
 
+
+def remove_dhcp_lease(lease_id):
+    try:
+        connection = routeros_api.RouterOsApiPool(config.mikrotik_ip,
+                                                  username=config.mikrotik_username,
+                                                  password=config.mikrotik_password,
+                                                  plaintext_login=True)
+        api = connection.get_api()
+        remove_lease = api.get_resource(f'/ip/dhcp-server/lease/remove/{lease_id}').get()
+        print(remove_lease)
+    except Exception as e:
+        print(e)
+        return 'No connection'
+
