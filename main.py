@@ -15,7 +15,7 @@ def device_request(message):
                      'request_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     print(f"DEVICE_ID: {message['DEVICE_ID']}, MESSAGE_ID: {message['MESSAGE_ID']}, URI: {message['URI']}")
     try:
-        with requests.get(message['URI'], timeout=(1, 1)) as resp:
+        with requests.get(message['URI'], timeout=(30, 30)) as resp:
             response_data.update({'response_code': resp.status_code,
                                   'response_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                                   'response_body': json.dumps(resp.json())})
