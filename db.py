@@ -46,7 +46,9 @@ class DB:
                 self.connection.commit()
                 return True
             except Exception as e:
+                print(query)
                 print('def upsert():', e)
+
         print('DB not connected, reconnect...')
         self.__init__()
 
