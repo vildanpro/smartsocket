@@ -62,7 +62,7 @@ def device_request(message, process_id):
                     "\tresponse_date = TO_DATE('{response_date}', 'YYYY-MM-DD HH24:MI:SS')\n" \
                     "WHERE message_id = {message_id}".format(**response_data)
             execute_query(query, update=True)
-            print(print_message, f'\n{process_id=}: Success')
+            print(print_message, f'\nPROCESS ID {process_id}: Success')
             return response_data
     except Exception as e:
         response_data.update({'response_code': 408,
@@ -74,7 +74,6 @@ def device_request(message, process_id):
                 "\trequest_date = TO_DATE('{request_date}', 'YYYY-MM-DD HH24:MI:SS')\n" \
                 "WHERE message_id = {message_id}".format(**response_data)
         execute_query(query, update=True)
-        # print(print_message, f'\n{process_id=}: Except')
         return response_data
 
 
