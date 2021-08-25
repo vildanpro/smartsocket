@@ -1,7 +1,6 @@
 from flask import Flask, render_template_string, request, redirect, url_for
 from db import DB
 from send_messages_to_devices import add_message
-from device_updater import ping_server
 
 
 app = Flask(__name__)

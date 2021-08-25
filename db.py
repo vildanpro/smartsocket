@@ -18,11 +18,12 @@ class DB:
         self.connection = None
         while not self.connection:
             try:
-                self.connection = cx_Oracle.connect(config.username,
-                                                    config.password,
-                                                    config.dsn,
-                                                    encoding=config.encoding)
-                print('DB connection - OK!\n')
+                self.connection = cx_Oracle.connect(
+                    config.username,
+                    config.password,
+                    config.dsn,
+                    encoding=config.encoding
+                )
             except cx_Oracle.Error as error:
                 print(error, f'\nWait {self.wait_connection} seconds...')
 
@@ -55,6 +56,11 @@ class DB:
     def get_new_messages(self):
         return self.select('SELECT * FROM sockets.messages WHERE message_state_id = 1 ORDER BY message_id')
 
+    def get_new_message(self, device_id):
+        query = f"SELECT * FROM sockets.messages WHERE message_state_id = 1 AND device_id = {device_id} AND rownum = 1"
+        print(query)
+        return self.select(query)[0] if self.select(query) else None
+
     def get_messages_types(self):
         return self.select('SELECT * FROM sockets.message_types')
 
@@ -66,12 +72,14 @@ class DB:
     def get_devices(self):
         return self.select('SELECT * FROM sockets.devices ORDER BY device_id')
 
-    def update_message_if_response_code_200(self,
-                                            message_id,
-                                            response_code,
-                                            request_date,
-                                            response_date,
-                                            response_body):
+    def update_message_if_response_code_200(
+            self,
+            message_id,
+            response_code,
+            request_date,
+            response_date,
+            response_body
+    ):
         self.upsert(f"""UPDATE sockets.messages
                         SET message_state_id = 21,
                             response_code = {response_code},

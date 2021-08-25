@@ -1,5 +1,4 @@
 from db import DB
-from mikrotik_api import get_dhcp_leases
 
 db = DB()
 
