@@ -1,10 +1,16 @@
-from multiprocessing import Process
-from datetime import datetime
 import json
-import requests
+from datetime import datetime
+from multiprocessing import Process
 from time import sleep
+
 import cx_Oracle
+import requests
+from loguru import logger
+
 import config
+
+
+logger.add("main_multiprocessing.log", rotation="1 week", enqueue=True)
 
 
 def make_dict_factory(cursor):
@@ -25,6 +31,7 @@ def execute_query(query, update=None):
             encoding=config.encoding
         )
     except Exception as e:
+        logger.exception("What?!")
         print(e, '\n', 'connection exception!')
         return None
     try:
@@ -42,6 +49,7 @@ def execute_query(query, update=None):
         connection.close()
         return data
     except Exception as e:
+        logger.exception("What?!")
         print(e, '\n', 'execute exception!')
 
 
@@ -65,6 +73,7 @@ def device_request(message, process_id):
             print(print_message, f'\nPROCESS ID {process_id}: Success')
             return response_data
     except Exception as e:
+        logger.exception("What?!")
         response_data.update({'response_code': 408,
                               'response_body': json.dumps({'Exception': str(e).replace("'", '')})})
         query = "UPDATE sockets.messages\n" \
