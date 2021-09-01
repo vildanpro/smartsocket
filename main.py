@@ -93,7 +93,7 @@ def device_process(device_id, process_id):
         message = message[0] if message else message
         if message:
             device_request(message, process_id)
-        sleep(1)
+        sleep(3)
 
 
 if __name__ == '__main__':
