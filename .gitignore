@@ -3,4 +3,4 @@
 /venv
 /venv-win
 config.py
-/main_multiprocessing.log
+/main.log

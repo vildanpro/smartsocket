@@ -13,4 +13,5 @@ if __name__ == '__main__':
     devices = db.get_devices()
     while True:
         for device in devices:
-            add_message(device, '41')
+            add_message(device, '21')
+        exit()

@@ -10,7 +10,7 @@ from loguru import logger
 import config
 
 
-logger.add("main_multiprocessing.log", rotation="1 week", enqueue=True)
+logger.add("main.log", rotation="1 week", enqueue=True)
 
 
 def make_dict_factory(cursor):
@@ -92,10 +92,7 @@ def device_process(device_id, process_id):
         message = execute_query(query)
         message = message[0] if message else message
         if message:
-            # print(f'PROCESS ID {process_id} WITH DEVICE ID {device_id}, message_id = {message["MESSAGE_ID"]}')
             device_request(message, process_id)
-        # else:
-        #     print(f'PROCESS ID {proccess_id} WITH DEVICE ID {device_id=}, No message')
         sleep(1)
 
 
