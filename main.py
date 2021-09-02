@@ -1,3 +1,4 @@
+import os
 import json
 from datetime import datetime
 from multiprocessing import Process
@@ -10,7 +11,7 @@ from loguru import logger
 import config
 
 
-logger.add("main.log", rotation="1 week", enqueue=True)
+logger.add(f"{os.getcwd()}/main.log", rotation="1 week", enqueue=True)
 
 
 def make_dict_factory(cursor):
