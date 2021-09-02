@@ -11,7 +11,7 @@ from loguru import logger
 import config
 
 
-logger.add(f"{os.getcwd()}/main.log", rotation="1 week", enqueue=True)
+logger.add(f"{os.getcwd()}/main.log", rotation="1 week", format="{time} {level} {message}", enqueue=True)
 
 
 def make_dict_factory(cursor):
