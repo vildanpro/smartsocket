@@ -1,17 +1,17 @@
-from db import DB
+from time import sleep
+from oracle_db import execute_query
 
-db = DB()
 
-
-def add_message(device, message_type_id):
-    db.insert_new_message(device_id=device['DEVICE_ID'],
-                          message_type_id=message_type_id)
-    print(f'Insert message: device_id {device["DEVICE_ID"]}, message_type_id {message_type_id}')
+def insert_new_message(device_id, message_type_id):
+    query = f'INSERT INTO sockets.messages(message_type_id, device_id) VALUES({message_type_id}, {device_id})'
+    print(query)
+    execute_query(query, result=True)
+    print(f'Insert message: device_id {device_id}, message_type_id {message_type_id}')
 
 
 if __name__ == '__main__':
-    devices = db.get_devices()
+    devices = execute_query('SELECT * FROM sockets.devices ORDER BY device_id')
     while True:
         for device in devices:
-            add_message(device, '22')
-        exit()
+            insert_new_message(device['DEVICE_ID'], 41)
+        sleep(30)

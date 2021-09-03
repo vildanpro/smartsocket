@@ -1,5 +1,5 @@
 from flask import Flask, render_template_string, request, redirect, url_for
-from db import DB
+from oracle_db import DB
 from send_messages_to_devices import add_message
 
 

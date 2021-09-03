@@ -4,3 +4,4 @@
 /venv-win
 config.py
 /main.log
+/messages.db
