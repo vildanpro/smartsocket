@@ -104,13 +104,13 @@ if __name__ == '__main__':
     for process in processes_dict.values():
         process.start()
     print(len(processes_dict), '- PROCESSES STARTED!')
-    while True:
-        sleep(30)
-        print('CHECK PROCESSES...')
-        for process_id, process in processes_dict.items():
-            print(process_id, process.is_alive())
-            if not process.is_alive():
-                print(f'PROCESS {process_id} is not alive, restarting...')
-                process.start()
-                print(f'PROCESS {process_id} started...')
-        print('PROCESSES CHECKED!')
+    # while True:
+    #     sleep(30)
+    #     print('CHECK PROCESSES...')
+    #     for process_id, process in processes_dict.items():
+    #         print(process_id, process.is_alive())
+    #         if not process.is_alive():
+    #             print(f'PROCESS {process_id} is not alive, restarting...')
+    #             process.start()
+    #             print(f'PROCESS {process_id} started...')
+    #     print('PROCESSES CHECKED!')
