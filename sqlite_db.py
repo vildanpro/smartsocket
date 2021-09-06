@@ -6,8 +6,8 @@ from sqlalchemy.orm import sessionmaker
 
 engine = create_engine(f'sqlite:///{os.getcwd()}/messages.db', echo=False)
 Base = declarative_base()
-Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
+Base.metadata.create_all(engine)
 session = Session()
 
 
