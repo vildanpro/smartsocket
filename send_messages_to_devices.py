@@ -14,4 +14,5 @@ if __name__ == '__main__':
     while True:
         for device in devices:
             insert_new_message(device['DEVICE_ID'], 41)
+
         sleep(30)

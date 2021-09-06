@@ -15,6 +15,7 @@ logger.add(f"{os.getcwd()}/main.log", rotation="1 week", format="{time} {level} 
 def device_request(message, process_id):
     request_date = datetime.now()
     print_message = f"DEVICE_ID: {message.DEVICE_ID}, MESSAGE_ID: {message.MESSAGE_ID}, URI: {message.URI}"
+    message_update = None
     try:
         with requests.get(message.URI, timeout=(30, 30)) as resp:
             message.MESSAGE_STATE_ID = 21
@@ -22,15 +23,20 @@ def device_request(message, process_id):
             message.RESPONSE_CODE = resp.status_code
             message.RESPONSE_DATE = datetime.now()
             message.RESPONSE_BODY = json.dumps(resp.json())
-            print(print_message, f'\nPROCESS ID {process_id}: Success')
-            sqlite_update_message(message)
+        if not message_update:
+            while not message_update:
+                message_update = sqlite_update_message(message)
+        print(print_message, f'\nPROCESS ID {process_id}: Success')
     except Exception as e:
         logger.exception("What?!")
         message.MESSAGE_STATE_ID = 24
         message.RESPONSE_CODE = 408
         message.RESPONSE_BODY = json.dumps({'Exception': str(e).replace("'", '')})
         message.REQUEST_DATE = request_date
-        sqlite_update_message(message)
+        if not message_update:
+            while not message_update:
+                message_update = sqlite_update_message(message)
+        print(print_message, f'\nPROCESS ID {process_id}: Success')
 
 
 def device_process(device_id, process_id):
@@ -102,6 +108,7 @@ if __name__ == '__main__':
         sleep(30)
         print('CHECK PROCESSES...')
         for process_id, process in processes_dict.items():
+            print(process_id, process.is_alive())
             if not process.is_alive():
                 print(f'PROCESS {process_id} is not alive, restarting...')
                 process.start()

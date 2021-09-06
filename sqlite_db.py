@@ -28,10 +28,13 @@ session = Session()
 
 
 def sqlite_insert_oracle_messages(oracle_messages):
-    for oracle_message in oracle_messages:
-        if not session.query(Message).get(oracle_message['MESSAGE_ID']):
-            session.add(Message(**oracle_message))
-            session.commit()
+    try:
+        for oracle_message in oracle_messages:
+            if not session.query(Message).get(oracle_message['MESSAGE_ID']):
+                session.add(Message(**oracle_message))
+        session.commit()
+    except Exception as e:
+        print(e)
 
 
 def sqlite_remove_message(message):
@@ -45,13 +48,23 @@ def sqlite_remove_message(message):
 
 
 def sqlite_get_message(device_id):
-    return session.query(Message).filter_by(DEVICE_ID=device_id, MESSAGE_STATE_ID=1).first()
+    try:
+        return session.query(Message).filter_by(DEVICE_ID=device_id, MESSAGE_STATE_ID=1).first()
+    except Exception as e:
+        print(e)
 
 
 def sqlite_get_processed_messages():
-    return session.query(Message).filter(Message.MESSAGE_STATE_ID != 1).all()
+    try:
+        return session.query(Message).filter(Message.MESSAGE_STATE_ID != 1).all()
+    except Exception as e:
+        print(e)
 
 
 def sqlite_update_message(message):
-    session.add(message)
-    session.commit()
+    try:
+        session.add(message)
+        session.commit()
+        return True
+    except Exception as e:
+        print(e)
