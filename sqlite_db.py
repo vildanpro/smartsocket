@@ -24,11 +24,10 @@ class Message(Base):
 
 Base.metadata.create_all(engine)
 
-session = Session()
-
 
 def sqlite_insert_oracle_messages(oracle_messages):
     try:
+        session = Session()
         for oracle_message in oracle_messages:
             if not session.query(Message).get(oracle_message['MESSAGE_ID']):
                 session.add(Message(**oracle_message))
@@ -39,6 +38,7 @@ def sqlite_insert_oracle_messages(oracle_messages):
 
 def sqlite_remove_message(message):
     try:
+        session = Session()
         delete_message = session.query(Message).get(message.MESSAGE_ID)
         session.delete(delete_message)
         session.commit()
@@ -49,6 +49,7 @@ def sqlite_remove_message(message):
 
 def sqlite_get_message(device_id):
     try:
+        session = Session()
         return session.query(Message).filter_by(DEVICE_ID=device_id, MESSAGE_STATE_ID=1).first()
     except Exception as e:
         print(e)
@@ -56,6 +57,7 @@ def sqlite_get_message(device_id):
 
 def sqlite_get_processed_messages():
     try:
+        session = Session()
         return session.query(Message).filter(Message.MESSAGE_STATE_ID != 1).all()
     except Exception as e:
         print(e)
@@ -63,6 +65,7 @@ def sqlite_get_processed_messages():
 
 def sqlite_update_message(message):
     try:
+        session = Session()
         session.add(message)
         session.commit()
         return True

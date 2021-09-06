@@ -54,6 +54,7 @@ def message_manager():
         sqlite_messages_processed = sqlite_get_processed_messages()
         if sqlite_messages_processed:
             for sqlite_message_processed in sqlite_messages_processed:
+                oracle_result = None
                 if sqlite_message_processed.RESPONSE_CODE == 200:
                     query = f"UPDATE sockets.messages\n" \
                             f"SET message_state_id = {sqlite_message_processed.MESSAGE_STATE_ID},\n" \
@@ -62,7 +63,7 @@ def message_manager():
                             f"\trequest_date = TO_DATE(\'{sqlite_message_processed.REQUEST_DATE}\', 'YYYY-MM-DD HH24:MI:SS'),\n" \
                             f"\tresponse_date = TO_DATE('{sqlite_message_processed.RESPONSE_DATE}', 'YYYY-MM-DD HH24:MI:SS')\n" \
                             f"WHERE message_id = {sqlite_message_processed.MESSAGE_ID}"
-                    execute_query(query, result=True)
+                    oracle_result = execute_query(query, result=True)
                 elif sqlite_message_processed.RESPONSE_CODE == 408:
                     query = f"UPDATE sockets.messages\n" \
                             f"SET message_state_id = {sqlite_message_processed.MESSAGE_STATE_ID},\n" \
@@ -70,10 +71,11 @@ def message_manager():
                             f"\tresponse_body = '{sqlite_message_processed.RESPONSE_BODY}',\n" \
                             f"\trequest_date = TO_DATE('{sqlite_message_processed.REQUEST_DATE}', 'YYYY-MM-DD HH24:MI:SS')\n" \
                             f"WHERE message_id = {sqlite_message_processed.MESSAGE_ID}"
-                    execute_query(query, result=True)
-                result = False
-                while not result:
-                    result = sqlite_remove_message(sqlite_message_processed)
+                    oracle_result = execute_query(query, result=True)
+                if oracle_result:
+                    result = False
+                    while not result:
+                        result = sqlite_remove_message(sqlite_message_processed)
 
         query = 'SELECT m.MESSAGE_ID, m.MESSAGE_TYPE_ID, m.DEVICE_ID, m.MESSAGE_STATE_ID, m.URI, m.RESPONSE_CODE,\n' \
                 '\t\tm.RESPONSE_BODY, m.REQUEST_DATE, m.RESPONSE_DATE\n' \
