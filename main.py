@@ -5,6 +5,7 @@ import requests
 import json
 from sqlite import Session, MessageModel
 from oracle import get_devices, get_new_oracle_messages, oracle_update_message
+from mongo import MessageModel
 
 
 process_timeout = 3
@@ -12,9 +13,8 @@ process_timeout = 3
 
 def process_func(device_id):
     while True:
-        s = Session()
         try:
-            m = s.query(MessageModel).filter_by(DEVICE_ID=device_id, MESSAGE_STATE_ID=1).first()
+            m = MessageModel.objects.filter(DEVICE_ID=device_id, MESSAGE_STATE_ID=1).first()
             if not m:
                 sleep(process_timeout)
                 continue
@@ -34,8 +34,7 @@ def process_func(device_id):
             message_updated = False
             while not message_updated:
                 try:
-                    s.add(m)
-                    s.commit()
+                    m.save()
                 except Exception as ee:
                     print('sqlite message update', ee)
                 else:
@@ -58,37 +57,39 @@ if __name__ == '__main__':
             print('Processes started...')
         while True:
             try:
-                session = Session()
                 exist = False
                 for oracle_message in get_new_oracle_messages():
-                    sqlite_messages = session.query(MessageModel).filter_by(DEVICE_ID=oracle_message.DEVICE_ID).all()
+                    sqlite_messages = MessageModel.objects.filter(DEVICE_ID=oracle_message.DEVICE_ID).all()
                     for sqlite_message in sqlite_messages:
                         if sqlite_message.MESSAGE_ID < oracle_message.MESSAGE_ID:
-                            session.delete(sqlite_message)
+                            sqlite_message.delete()
                         elif oracle_message.MESSAGE_ID == sqlite_message.MESSAGE_ID:
                             exist = True
                     if not exist:
-                        session.add(MessageModel(
-                            MESSAGE_ID=oracle_message.MESSAGE_ID,
-                            MESSAGE_TYPE_ID=oracle_message.MESSAGE_TYPE_ID,
-                            DEVICE_ID=oracle_message.DEVICE_ID,
-                            MESSAGE_STATE_ID=oracle_message.MESSAGE_STATE_ID,
-                            URI=oracle_message.URI,
-                            RESPONSE_CODE=oracle_message.RESPONSE_CODE,
-                            RESPONSE_BODY=oracle_message.RESPONSE_BODY,
-                            REQUEST_DATE=oracle_message.REQUEST_DATE,
-                            RESPONSE_DATE=oracle_message.RESPONSE_DATE)
-                        )
-                sqlite_done_messages = session.query(MessageModel).filter(MessageModel.MESSAGE_STATE_ID != 1).all()
+                        try:
+                            message = MessageModel(
+                                MESSAGE_ID=oracle_message.MESSAGE_ID,
+                                MESSAGE_TYPE_ID=oracle_message.MESSAGE_TYPE_ID,
+                                DEVICE_ID=oracle_message.DEVICE_ID,
+                                MESSAGE_STATE_ID=oracle_message.MESSAGE_STATE_ID,
+                                URI=oracle_message.URI,
+                                RESPONSE_CODE=oracle_message.RESPONSE_CODE,
+                                RESPONSE_BODY=oracle_message.RESPONSE_BODY,
+                                REQUEST_DATE=oracle_message.REQUEST_DATE,
+                                RESPONSE_DATE=oracle_message.RESPONSE_DATE
+                            )
+                            message.save()
+
+                        except Exception as me:
+                            print('save to mongo', me)
+                sqlite_done_messages = MessageModel.objects.filter(MESSAGE_STATE_ID__ne=1).all()
                 for sqlite_message in sqlite_done_messages:
                     try:
                         oracle_update_message(sqlite_message)
                     except Exception as e:
                         print('main -> oracle_update_message:', e)
                     else:
-                        session.delete(sqlite_message)
-                session.commit()
-                session.close()
+                        sqlite_message.delete()
             except Exception as e:
-                print(e)
+                print('message loop', e)
             sleep(1)
