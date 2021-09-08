@@ -6,8 +6,8 @@ from sqlalchemy.orm import sessionmaker
 
 engine = create_engine(f'sqlite:///{os.getcwd()}/messages.db', echo=False)
 Base = declarative_base()
+
 Session = sessionmaker(bind=engine)
-Base.metadata.create_all(engine)
 
 
 class MessageModel(Base):
@@ -23,4 +23,4 @@ class MessageModel(Base):
     RESPONSE_DATE = Column(Date)
 
 
-
+Base.metadata.create_all(engine)
