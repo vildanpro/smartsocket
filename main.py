@@ -9,6 +9,7 @@ from oracle import get_devices, get_new_oracle_messages, oracle_update_message
 
 process_timeout = 3
 
+
 def process_func(device_id):
     while True:
         s = Session()
@@ -19,21 +20,17 @@ def process_func(device_id):
                 continue
         except Exception as ex:
             print('process_func -> get message', ex)
-            sleep(process_timeout)
         else:
             dt = datetime.now()
+            response = None
             try:
-                response = None
-                try:
-                    response = requests.get(m.URI, timeout=(30, 30))
-                    m.RESPONSE_BODY = json.dumps(response.json())
-                except Exception as e:
-                    m.RESPONSE_BODY = json.dumps({'Exception': str(e).replace("'", '')})
-                m.MESSAGE_STATE_ID = 21 if response else 24
-                m.RESPONSE_CODE = 200 if response else 408
-                m.REQUEST_DATE = m.RESPONSE_DATE = dt
-            except Exception:
-                sleep(process_timeout)
+                response = requests.get(m.URI, timeout=(30, 30))
+                m.RESPONSE_BODY = json.dumps(response.json())
+            except Exception as e:
+                m.RESPONSE_BODY = json.dumps({'Exception': str(e).replace("'", '')})
+            m.MESSAGE_STATE_ID = 21 if response else 24
+            m.RESPONSE_CODE = 200 if response else 408
+            m.REQUEST_DATE = m.RESPONSE_DATE = dt
             message_updated = False
             while not message_updated:
                 try:
@@ -43,6 +40,7 @@ def process_func(device_id):
                     print('sqlite message update', ee)
                 else:
                     message_updated = True
+        sleep(process_timeout)
 
 
 if __name__ == '__main__':
