@@ -7,8 +7,7 @@ from sqlite import Session, MessageModel
 from oracle import get_devices, get_new_oracle_messages, oracle_update_message
 
 
-time_to_sleep = 2
-
+process_timeout = 3
 
 def process_func(device_id):
     while True:
@@ -16,11 +15,11 @@ def process_func(device_id):
         try:
             m = s.query(MessageModel).filter_by(DEVICE_ID=device_id, MESSAGE_STATE_ID=1).first()
             if not m:
-                sleep(time_to_sleep)
+                sleep(process_timeout)
                 continue
         except Exception as ex:
             print('process_func -> get message', ex)
-            sleep(time_to_sleep)
+            sleep(process_timeout)
         else:
             dt = datetime.now()
             try:
@@ -34,7 +33,7 @@ def process_func(device_id):
                 m.RESPONSE_CODE = 200 if response else 408
                 m.REQUEST_DATE = m.RESPONSE_DATE = dt
             except Exception:
-                sleep(time_to_sleep)
+                sleep(process_timeout)
             message_updated = False
             while not message_updated:
                 try:
@@ -94,4 +93,4 @@ if __name__ == '__main__':
                 session.close()
             except Exception as e:
                 print(e)
-            sleep(time_to_sleep)
+            sleep(1)
