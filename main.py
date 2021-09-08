@@ -7,7 +7,7 @@ from sqlite import Session, MessageModel
 from oracle import get_devices, get_new_oracle_messages, oracle_update_message
 
 
-time_to_sleep = 1
+time_to_sleep = 2
 
 
 def process_func(device_id):
