@@ -5,6 +5,7 @@ from oracle import credentials, get_devices
 
 time_to_sleep = 30
 loop = False
+action = 41
 
 
 def insert_new_message(device_id, message_type_id):
@@ -21,9 +22,10 @@ def insert_new_message(device_id, message_type_id):
 
 
 if __name__ == '__main__':
+    count = 0
     while True:
-        for device in get_devices():
-            insert_new_message(device.DEVICE_ID, 41)
-        if not loop:
+        for device in [385]:
+            insert_new_message(device, action)
+        if count > 10:
             break
-        sleep(time_to_sleep)
+        count += 1

@@ -62,7 +62,10 @@ if __name__ == '__main__':
                     sqlite_messages = MessageModel.objects.filter(DEVICE_ID=oracle_message.DEVICE_ID).all()
                     for sqlite_message in sqlite_messages:
                         if sqlite_message.MESSAGE_ID < oracle_message.MESSAGE_ID:
-                            sqlite_message.delete()
+                            if sqlite_message.RESPONSE_BODY:
+                                sqlite_message.delete()
+                            else:
+                                exist = True
                         elif oracle_message.MESSAGE_ID == sqlite_message.MESSAGE_ID:
                             exist = True
                     if not exist:
