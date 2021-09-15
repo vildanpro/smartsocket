@@ -21,7 +21,7 @@ def process_func(device_id):
         except Exception as ex:
             print('process_func -> get message', ex)
         else:
-            dt = datetime.now()
+            m.REQUEST_DATE  = datetime.now()
             response = None
             try:
                 response = requests.get(m.URI, timeout=(30, 30))
@@ -30,7 +30,7 @@ def process_func(device_id):
                 m.RESPONSE_BODY = json.dumps({'Exception': str(e).replace("'", '')})
             m.MESSAGE_STATE_ID = 21 if response else 24
             m.RESPONSE_CODE = 200 if response else 408
-            m.REQUEST_DATE = m.RESPONSE_DATE = dt
+            m.RESPONSE_DATE = datetime.now()
             message_updated = False
             while not message_updated:
                 try:

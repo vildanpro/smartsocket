@@ -3,9 +3,9 @@ import cx_Oracle
 from oracle import credentials, get_devices
 
 
-time_to_sleep = 30
+time_to_sleep = 10
 loop = False
-action = 41
+action = 22
 
 
 def insert_new_message(device_id, message_type_id):
@@ -24,8 +24,8 @@ def insert_new_message(device_id, message_type_id):
 if __name__ == '__main__':
     count = 0
     while True:
-        for device in [385]:
-            insert_new_message(device, action)
-        if count > 10:
+        for device in get_devices():
+            insert_new_message(device.DEVICE_ID, action)
+        if not loop:
             break
-        count += 1
+        sleep(time_to_sleep)
