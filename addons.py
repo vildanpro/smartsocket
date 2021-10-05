@@ -35,7 +35,7 @@ def device_request(uri):
     except Exception as ee:
         response = None
         response_body = json.dumps({'Exception': str(ee).replace("'", '')})
-    if json.loads(response_body).get["Signal"]:
+    if json.loads(response_body).get("Signal"):
         for_print = json.loads(response_body)["Signal"]
     else:
         for_print = 'Timeout'
