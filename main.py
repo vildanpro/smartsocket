@@ -24,7 +24,7 @@ def process_func(device_id):
             m.REQUEST_DATE  = datetime.now()
             response = None
             try:
-                response = requests.get(m.URI, timeout=(60, 60))
+                response = requests.get(m.URI, timeout=(30, 30))
                 m.RESPONSE_BODY = json.dumps(response.json())
             except Exception as e:
                 m.RESPONSE_BODY = json.dumps({'Exception': str(e).replace("'", '')})
