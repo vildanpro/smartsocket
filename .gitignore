@@ -6,3 +6,4 @@ config.py
 /main.log
 /messages.db
 /messages.db-journal
+/tasmota.log
