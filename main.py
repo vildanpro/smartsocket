@@ -25,6 +25,7 @@ def message_handler(dev):
                     print(ee)
                 else:
                     message_updated = True
+        sleep(3)
 
 
 def start_processes(devices):
