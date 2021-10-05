@@ -1,14 +1,28 @@
+import json
+import logging
+from datetime import datetime
 from multiprocessing import Process
 from time import sleep
-from datetime import datetime
-import requests
-import json
-from sqlite import Session, MessageModel
-from oracle import get_devices, get_new_oracle_messages, oracle_update_message
-from mongo import MessageModel
 
+import requests
+
+from mongo import MessageModel
+from oracle import get_devices, get_new_oracle_messages, oracle_update_message
 
 process_timeout = 3
+
+
+def get_logger():
+    logger = logging.getLogger("tasmota_logger")
+    logger.setLevel(logging.DEBUG)
+
+    fh = logging.FileHandler("tasmota.log")
+    fmt = '%(asctime)s - %(threadName)s - %(levelname)s - %(message)s'
+    formatter = logging.Formatter(fmt)
+    fh.setFormatter(formatter)
+
+    logger.addHandler(fh)
+    return logger
 
 
 def process_func(device_id):
@@ -23,6 +37,7 @@ def process_func(device_id):
         else:
             m.REQUEST_DATE  = datetime.now()
             response = None
+            log.debug(f'Request {m.URI}')
             try:
                 response = requests.get(m.URI, timeout=(30, 30))
                 m.RESPONSE_BODY = json.dumps(response.json())
@@ -32,6 +47,7 @@ def process_func(device_id):
             m.RESPONSE_CODE = 200 if response else 408
             m.RESPONSE_DATE = datetime.now()
             message_updated = False
+            log.debug(f'Response body for request {m.URI}\n{m.RESPONSE_BODY}')
             while not message_updated:
                 try:
                     m.save()
@@ -43,6 +59,7 @@ def process_func(device_id):
 
 
 if __name__ == '__main__':
+    log = get_logger()
     print('Start Tasmota script')
     while True:
         try:
