@@ -35,7 +35,7 @@ def device_request(uri):
     except Exception as ee:
         response = None
         response_body = json.dumps({'Exception': str(ee).replace("'", '')})
-    logger.debug(f'Response body for request {uri}\n{response_body}')
+    logger.debug(f'Response body for request {uri}\n{json.loads(response_body)["Signal"]}')
     print(f'Response {uri}\n{response_body}')
     return {'response_body': response_body, 'response_code': response.status_code if response else 408}
 
