@@ -20,7 +20,9 @@ def get_devices():
     except Exception as e:
         print('get_devices', e)
     else:
-        return cursor.fetchall()
+        data = cursor.fetchall()
+        connection.close()
+        return data
 
 
 def get_new_oracle_messages():
@@ -33,7 +35,9 @@ def get_new_oracle_messages():
     except Exception as e:
         print('get_new_oracle_messages', e)
     else:
-        return cursor.fetchall()
+        data = cursor.fetchall()
+        connection.close()
+        return data
 
 
 def oracle_update_message(message):
@@ -48,3 +52,4 @@ def oracle_update_message(message):
         print('oracle -> oracle_update_message', e)
     else:
         connection.commit()
+        connection.close()
